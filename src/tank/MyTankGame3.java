@@ -38,10 +38,12 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 	JMenuBar jmb=null;
 	//开始游戏
 	JMenu jm1=null;
+	JMenu jm2=null;
 	JMenuItem jmil=null;
 	JMenuItem jmi2=null;//退出系统
 	JMenuItem jmi3=null;//存盘退出
 	JMenuItem jmi4=null;
+	JMenuItem jmi5=null;
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		MyTankGame3 mtg=new MyTankGame3();
@@ -52,12 +54,13 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 		//创建菜单及菜单选项
 		jmb=new JMenuBar();
 		jm1 =new JMenu("游戏(G)");
+		jm2 = new JMenu("下一关(M)");
 		
 		jmil =new JMenuItem("开始新游戏(N)");
 		jmi2 =new JMenuItem("退出游戏(E)");
 		jmi3 =new JMenuItem("存盘退出游戏(C)");
 		jmi4 =new JMenuItem("继续上局游戏(S)");
-		
+		jmi5 =new JMenuItem("下一关(L)");
 		//注册监听
 		jmi4.addActionListener(this);
 		jmi4.setActionCommand("conGame");
@@ -72,18 +75,24 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 		jmil.addActionListener(this);
 		jmil.setActionCommand("newgame");
 		
+		jmi5.addActionListener(this);
+		jmi5.setActionCommand("next");
 		//设置快捷方式
 		jm1.setMnemonic('G');
 		jmil.setMnemonic('N');
 		jmi2.setMnemonic('E');
 		jmi3.setMnemonic('C');
 		jmi4.setMnemonic('S');
+		jm2.setMnemonic('M');
+		jmi5.setMnemonic('L');
 		
 		jm1.add(jmil);
 		jm1.add(jmi2);
 		jm1.add(jmi3);
 		jm1.add(jmi4);
+		jm2.add(jmi5);
 		jmb.add(jm1);
+		jmb.add(jm2);
 		
 		msp=new MyStartPanel();
 		Thread t=new Thread(msp);
@@ -98,9 +107,30 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent arg0) {//对用户不同的点击作出不同的处理
 		// TODO Auto-generated method stub
+		if(arg0.getActionCommand().equals("next")) {
+			System.out.println("hhhhhj");
+			if(Recorder.getExsitEny()==0) {
+				System.out.println("7777777");
+				if(mp != null)
+					this.remove(mp);
+				
+				mp=new MyPanel("newGame");//启动mp线程			
+				Thread t=new Thread(mp);
+				t.start();
+				this.add(mp);
+				//注册监听
+				this.addKeyListener(mp);
+				//显示,刷新JFrame
+				this.setVisible(true);
+			}
+		}
 		if(arg0.getActionCommand().equals("newgame"))
 		{
 			//创建战场面板
+//			System.out.println("gg");
+			if(mp != null)
+				this.remove(mp);
+			
 			mp=new MyPanel("newGame");//启动mp线程			
 			Thread t=new Thread(mp);
 			t.start();
@@ -287,10 +317,10 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		//画出提示信息坦克(该坦克不参与战斗)
 		this.drawTank(80,330, g, 0, 0);
 		g.setColor(Color.black);
-		g.drawString(Recorder.getEnNum()+"", 110, 350);
-		this.drawTank(130, 330, g, 0, 1);
+		g.drawString(Recorder.getExsitEny()+"", 110, 350);
+		this.drawTank(170, 330, g, 0, 1);
 		g.setColor(Color.black);
-		g.drawString(Recorder.getMyLife()+"", 165, 350);
+		g.drawString(Recorder.currntlife+"", 210, 350);
 		
 		//画出玩家的总成绩
 		g.setColor(Color.black);
@@ -405,7 +435,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 				Shot enemyShot=et.ss.get(j);
 				if(hero.isLive)
 				{
-					if(this.hitTank(enemyShot, hero))
+					if(this.hitTank(enemyShot, hero)) // hero 被打中
 					{
 						
 					}
@@ -440,6 +470,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 							Recorder.reduceEnNum();
 							//增加我的记录
 							Recorder.addEnNumRec();
+							
+							Recorder.setExsitEny();
 						}
 					}
 					
@@ -461,17 +493,27 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		case 2:
 			if(s.x>et.x&&s.x<et.x+20&&s.y>et.y&&s.y<et.y+30)
 			{
+				System.out.println(et.getmylife());
 				//击中
 				//子弹死亡
 				s.isLive=false;
 				//敌人坦克死亡
-				et.isLive=false;
 				b2=true;
-				//创建一颗炸弹,放入Vector
-				Bomb b=new Bomb(et.x,et.y);
-				//放入Vector
-				bombs.add(b);
-				
+				if(et.getmylife()==1) { // 死亡的为敌方坦克 
+					//创建一颗炸弹,放入Vector
+					et.isLive=false;
+					System.out.println("gg!");
+					Bomb b=new Bomb(et.x,et.y);
+					//放入Vector
+					bombs.add(b);
+				}
+				else {// hero 被击中但未死亡
+					et.ducelife();
+					et.setX(100);
+					et.setY(100);
+					//((Hero) et).Hero(100,100);
+					//System.out.println("hhhh"+ et.mylife);
+				}
 			}
 			
 			break;
@@ -479,17 +521,26 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		case 3:
 			if(s.x>et.x&&s.x<et.x+30&&s.y>et.y&&s.y<et.y+20)
 			{
+				System.out.println(et.getmylife());
 				//击中
 				//子弹死亡
 				s.isLive=false;
 				//敌人坦克死亡
-				et.isLive=false;
 				b2=true;
-				//创建一颗炸弹,放入Vector
-				Bomb b=new Bomb(et.x,et.y);
-				//放入Vector
-				bombs.add(b);
-				
+				if(et.getmylife()==1) { // 死亡的为敌方坦克 
+					//创建一颗炸弹,放入Vector
+					et.isLive=false;
+					System.out.println("gg!");
+					Bomb b=new Bomb(et.x,et.y);
+					//放入Vector
+					bombs.add(b);
+				}
+				else {// hero 被击中但未死亡
+					et.ducelife();
+					et.setX(100);
+					et.setY(100);
+					//System.out.println("hhhh"+ et.mylife);
+				}
 			}
 		}
 		

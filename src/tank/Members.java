@@ -83,11 +83,17 @@ class Node{
 class Recorder
 {
 	//记录每关有多少敌人
-	private static int enNum=20;
+	private static int enNum=3;
+	
+	//当前还有多少敌人
+	private static int exsitEny = enNum;
 	//设置我有多少可以用的人
-	private static int myLife=3;
+	private static int myLife=4;
+	
 	//记录总共消灭了多少敌人
 	private static int allEnNum=0;
+	
+	public static int currntlife = myLife;
 	//从文件中恢复记录点
 	static Vector<Node>  nodes=new Vector<Node>();
 	
@@ -96,8 +102,7 @@ class Recorder
 	private static FileReader fr=null;
 	private static BufferedReader br=null;
 	
-	private  Vector<EnemyTank> ets=new Vector<EnemyTank>();
-	
+	private  Vector<EnemyTank> ets=new Vector<EnemyTank>();	
 	
 	
 	//完成读取认为
@@ -246,6 +251,12 @@ class Recorder
 	public static int getMyLife() {
 		return myLife;
 	}
+	public static int getExsitEny() {
+		return exsitEny;
+	}
+	public static void setExsitEny() {
+		Recorder.exsitEny -= 1;
+	}
 	public static void setMyLife(int myLife) {
 		Recorder.myLife = myLife;
 	}
@@ -273,8 +284,7 @@ class Recorder
 	}
 
 
-	public  void setEts(Vector<EnemyTank> ets1) {
-		
+	public  void setEts(Vector<EnemyTank> ets1) {	
 		this.ets = ets1;
 		System.out.println("ok");
 	}
@@ -324,11 +334,9 @@ class Shot implements Runnable  {
 		this.y=y;
 		this.direct=direct;
 	}
-	public void run() {
-		
+	public void run() {	
 		while(true)
-		{
-			
+		{		
 			try {
 				Thread.sleep(50);
 			} catch (Exception e) {
@@ -370,6 +378,7 @@ class Shot implements Runnable  {
 class Tank
 {
 	//表示坦克的横坐标
+	int mylife = 1;
 	int x=0;
 	//坦克纵坐标
 	int y=0;
@@ -428,15 +437,19 @@ class Tank
 	public void setColor(int color) {
 		this.color = color;
 	}
+	public void ducelife() {
+		this.mylife -= 1;
+	}
+	public int getmylife() {
+		return this.mylife;
+	}
 	
 }
 
 //敌人的坦克,把敌人做成线程类
 class EnemyTank extends Tank implements Runnable
 {
-	
-	int times=0;
-	
+	int times=0;	
 	//定义一个向量，可以访问到MyPanel上所有敌人的坦克
 	Vector<EnemyTank> ets=new Vector<EnemyTank>();
 	
@@ -619,8 +632,7 @@ class EnemyTank extends Tank implements Runnable
 	}
 	
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 		while(true)
 		{
 			switch(this.direct)
@@ -732,9 +744,7 @@ class EnemyTank extends Tank implements Runnable
 						t.start();
 					}
 				}
-			}
-			
-			
+			}			
 			//让坦克随机产生一个新的方向
 			this.direct=(int)(Math.random()*4);
 			
@@ -743,38 +753,33 @@ class EnemyTank extends Tank implements Runnable
 			{
 				//让坦克死亡后，退出线程.
 				break;
-			}
-			
-			
-			
-			
-			
-		}
-		
+			}		
+		}		
 	}
 }
 
 //我的坦克
 class Hero extends Tank
-{
-	
-	//子弹
-	
+{	
+	//子弹	
 	//Shot s=null;
+	int mylife = 4;
 	Vector<Shot> ss=new Vector<Shot>();
 	Shot s=null;
 	public Hero(int x,int y)
 	{
-		super(x,y);
-		
-		
+		super(x,y);	
 	}
-	
+	public int getmylife() {
+		return this.mylife;
+	}
 	//开火
+	public void ducelife() {
+		this.mylife -=1;
+		Recorder.currntlife -= 1;
+	}
 	public void shotEnemy()
-	{
-		
-		
+	{	
 		switch(this.direct)
 		{
 		case 0:
@@ -799,31 +804,38 @@ class Hero extends Tank
 		}
 		//启动子弹线程
 		Thread t=new Thread(s);
-		t.start();
-		
+		t.start();		
 	}
 	
 	
 	//坦克向上移动
 	public void moveUp()
 	{
+		if(y-speed < 0)
+			return;
 		y-=speed;
 	}
 	//坦克向右移动
 	public void moveRight()
 	{
+		if(x+speed > 370)
+			return;
 		x+=speed;
 	}
 	
 	//坦克向下移动
 	public void moveDown()
 	{
+		if(y+speed > 270)
+			return;
 		y+=speed;
 	}
 	
 	//向左
 	public void moveLeft()
 	{
+		if(x-speed < 0)
+			return;
 		x-=speed;
 	}
 }
