@@ -78,6 +78,32 @@ class Node{
 	}
 }
 
+class bug implements Runnable{// 地形块 
+	int x;
+	int y;
+	int type;
+	boolean islive = true;
+	// 1 砖 阻止移动 可打穿
+	// 2 铁 阻止移动  不可打穿 // shot 。 live 上相关
+	// 3 河流  阻止移动 炮弹无视
+	public bug(int x,int y,int type){
+		this.x = x;
+		this.y = y;
+		this.type = type;
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true)
+		{		
+			try {
+				Thread.sleep(50);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
+}
 
 //记录类,同时也可以保存玩家的设置
 class Recorder
@@ -326,6 +352,13 @@ class Shot implements Runnable  {
 	int y;
 	int direct;
 	int speed=1;
+//	public void setspeed(int i) {  // useless 
+//		if(i == 2)//pink
+//			this.speed = 2;
+//		if(i == 5)
+//			this.speed = 3; //boss
+//		this.speed = 1;
+//	}
 	//是否还活着
 	boolean isLive=true;
 	public Shot(int x,int y,int direct)
@@ -392,6 +425,43 @@ class Tank
 	
 	//坦克的速度
 	int speed=1;
+	int value = 100;
+	int type = 1; // 决定坦克的种类
+	
+	public void settank(int i) {//颜色 移动速度 子弹速度 生命值
+		if(i == 1) {//cyan
+			this.speed = 1;
+			this.value = 100;
+			this.type = 1;
+			this.color = 0;
+		}
+		if(i == 2) {//pink
+			this.speed = 1;	
+			this.value = 200;
+			this.type = 2;
+			this.color = 2;
+		}
+		if(i == 3) {//red
+			this.speed = 2;
+			this.value = 300;
+			this.type = 3;
+			this.color = 3;
+		}
+		if(i == 4) {//green
+			this.speed = 1;
+			this.value = 400;
+			this.mylife = 4;
+			this.type = 4;
+			this.color = 4;
+		}
+		if(i == 5) {//blue
+			this.speed = 2;
+			this.value = 500;
+			this.mylife = 6;
+			this.type = 5;
+			this.color = 5;
+		}
+	}
 	public Tank(int x,int y)
 	{
 		this.x=x;

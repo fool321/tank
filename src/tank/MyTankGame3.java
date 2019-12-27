@@ -223,8 +223,10 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 	Vector<Node> nodes=new Vector<Node>();	
 	//定义炸弹集合
 	Vector<Bomb> bombs=new Vector<Bomb>();
+	//定义墙块集合
+	Vector<bug> bugs = new Vector<bug>();
 	
-	int enSize=3;   //enamy size 敌人数目  每关不同
+	int enSize=10;   //enamy size 敌人数目  每关不同
 	
 	//定义三张图片,三张图片才能组成一颗炸弹
 	Image image1=null;
@@ -239,12 +241,34 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		hero=new Hero(50,200);	
 		if(flag.equals("newGame"))
 		{
+			//初始化砖块
+			for(int i=0;i<=10;i++) {
+				bug zkBug = new bug(50+5*i, 100, 1);
+				bugs.add(zkBug);
+				Thread g1 = new Thread(zkBug);
+				g1.start();
+			}
 			//初始化敌人的坦克
 			for(int i=0;i<enSize;i++)
 			{
+				
 				//创建一辆敌人的坦克对象
 				EnemyTank et=new EnemyTank((i+1)*50,0);
-				et.setColor(0);
+				int ram = (int)(Math.random()*100)+1;
+				if(ram<=70&&ram>=0) {// type 1 putong
+					et.settank(1);
+				}
+				else if(ram <= 80) {
+					et.settank(2);
+				}
+				else if(ram <= 90) {
+					et.settank(3);
+				}
+				else {
+					et.settank(4);
+				}
+				
+				//et.setColor(0);
 				et.setDirect(2);
 				//将MyPanel的敌人坦克向量交给该敌人坦克
 				et.setEts(ets);   //敌人坦克间的交互，互相知晓
@@ -343,6 +367,8 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		//画出提示信息
 		this.showInfo(g);
 		
+//		g.setColor(Color.yellow); //静态砖块
+//		g.fill3DRect(50, 50, 5, 5, false);
 		//画出自己的坦克
 		if(hero.isLive)
 		{
@@ -391,19 +417,44 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 			}	
 		}
 		
+		//System.out.println("lzf666 " + bugs.size() + " lzy");
+		//画出墙块
+		for(int i=0;i<bugs.size();i++) {
+			//v
+			bug lzBug = bugs.get(i);
+			if(lzBug.islive) {//没有被摧毁
+				System.out.println("lzf666");
+				switch(lzBug.type) {
+					case 1:
+						g.setColor(Color.yellow);
+					case 2:
+						g.setColor(Color.darkGray);
+					case 3:
+						g.setColor(Color.blue);
+				}
+				g.fill3DRect(lzBug.x, lzBug.y, 5, 5, false);
+			}
+		}
 		//画出敌人的坦克
 		for(int i=0;i<ets.size();i++)
 		{
 			EnemyTank et=ets.get(i);		
 			if(et.isLive)
 			{		
-				this.drawTank(et.getX(), et.getY(), g, et.getDirect(), 0);
+				this.drawTank(et.getX(), et.getY(), g, et.getDirect(), et.color);
 				//再画出敌人的子弹
 				//System.out.println("坦克子弹有:"+et.ss.size());
+				
 				for(int j=0;j<et.ss.size();j++)
 				{
 					//取出子弹
 					Shot enemyShot=et.ss.get(j);
+//					enemyShot.setspeed(et.type);
+//					System.out.println(enemyShot.speed);
+					if(et.type == 2)
+						enemyShot.speed = 2;
+					if(et.type == 5)
+						enemyShot.speed = 3;
 					if(enemyShot.isLive)
 					{
 						//System.out.println("第 "+i+"坦克的 "+j+"颗子弹x="+enemyShot.x);
@@ -414,9 +465,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 					}
 				}
 			}
-		}
-		
-		
+		}	
 	}
 	
 	//敌人的坦克是否击中我
@@ -558,14 +607,26 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 			g.setColor(Color.cyan);
 			break;
 		case 1:
-			g.setColor(Color.yellow);
+			g.setColor(Color.yellow); //hero
+			break;
+		case 2:
+			g.setColor(Color.pink);
+			break;
+		case 3:
+			g.setColor(Color.red);
+			break;
+		case 4:
+			g.setColor(Color.green);
+			break;
+		case 5:
+			g.setColor(Color.blue);// boss
 			break;
 		}	
 		//判断方向
 		switch(direct)
 		{
 		case 0://向上
-			g.fill3DRect(x, y, 5, 30,false);
+			g.fill3DRect(x, y, 5, 30,false); 
 			g.fill3DRect(x+15,y , 5, 30,false);
 			g.fill3DRect(x+5,y+5 , 10, 20,false);
 			g.fillOval(x+5, y+10, 10, 10);
