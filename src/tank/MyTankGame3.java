@@ -226,7 +226,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 	//定义墙块集合
 	Vector<bug> bugs = new Vector<bug>();
 	
-	int enSize=10;   //enamy size 敌人数目  每关不同
+	int enSize=100;   //enamy size 敌人数目  每关不同
 	
 	//定义三张图片,三张图片才能组成一颗炸弹
 	Image image1=null;
@@ -234,7 +234,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 	Image image3=null;
 	
 	//构造函数
-	public MyPanel(String flag)
+	public MyPanel(String flag)// int stage
 	{		
 		//恢复记录 
 		Recorder.getRecoring();	
@@ -242,18 +242,41 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		if(flag.equals("newGame"))
 		{
 			//初始化砖块
-			for(int i=0;i<=10;i++) {
-				bug zkBug = new bug(50+5*i, 100, 1);
-				bugs.add(zkBug);
-				Thread g1 = new Thread(zkBug);
-				g1.start();
+			bug b11 =  null;
+			bug b12 =  null;
+			b11 = map.b11;b12=map.b12;
+			//hero.setbugs(b11, b12);
+			int xnum = (b12.x-b11.x)/20;
+			int ynum = (b12.y-b11.y)/30;
+			//System.out.println(xnum);System.out.println(ynum);
+			
+			for(int i=1;i<=ynum;i++) {
+				for(int j=1;j<=xnum;j++) {
+					bug zkBug = new bug((j-1)*20+b11.x, (i-1)*30+b11.y, b11.type);
+					bugs.add(zkBug);
+					Thread g1 = new Thread(zkBug);
+					g1.start();
+					hero.setbugs(zkBug);
+				}
 			}
+//			for(int i=0;i<=5;i++) {
+//				bug zkBug = new bug(50+30*i, 100, 1);
+//				bugs.add(zkBug);
+//				Thread g1 = new Thread(zkBug);
+//				g1.start();
+//			}
 			//初始化敌人的坦克
 			for(int i=0;i<enSize;i++)
 			{
-				
 				//创建一辆敌人的坦克对象
 				EnemyTank et=new EnemyTank((i+1)*50,0);
+				for(int ii=1;ii<=ynum;ii++) {
+					for(int j=1;j<=xnum;j++) {
+						bug zkBug = new bug((j-1)*20+b11.x, (ii-1)*30+b11.y, b11.type);
+						et.setbugs(zkBug);
+					}
+				}
+				
 				int ram = (int)(Math.random()*100)+1;
 				if(ram<=70&&ram>=0) {// type 1 putong
 					et.settank(1);
@@ -363,7 +386,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 	{
 		super.paint(g);
 		g.fillRect(0, 0, 400, 300);
-		
+		//g.drawPolygon((20,100), 100, 2);
 		//画出提示信息
 		this.showInfo(g);
 		
@@ -423,16 +446,21 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 			//v
 			bug lzBug = bugs.get(i);
 			if(lzBug.islive) {//没有被摧毁
-				System.out.println("lzf666");
+				//System.out.println("lzf666 "+ lzBug.type );
 				switch(lzBug.type) {
 					case 1:
 						g.setColor(Color.yellow);
+						break;
 					case 2:
 						g.setColor(Color.darkGray);
+						break;
 					case 3:
 						g.setColor(Color.blue);
+						break;
 				}
-				g.fill3DRect(lzBug.x, lzBug.y, 5, 5, false);
+				//g.setColor(Color.yellow);
+				g.fillRect(lzBug.x, lzBug.y, 30, 30); //无内边框，直接填充
+				//g.fill3DRect(lzBug.x, lzBug.y, 30, 30, false); // 有内边框
 			}
 		}
 		//画出敌人的坦克
@@ -663,24 +691,24 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		if(arg0.getKeyCode()==KeyEvent.VK_W)
 		{
 			//设置我的坦克的方向
-			this.hero.setDirect(0);
-			this.hero.moveUp();
+			if(this.hero.setDirect(0))
+				this.hero.moveUp();
 			
 		}else if(arg0.getKeyCode()==KeyEvent.VK_D)
 		{
 			//向右
-			this.hero.setDirect(1);
-			this.hero.moveRight();
+			if(this.hero.setDirect(1))
+				this.hero.moveRight();
 		}else if(arg0.getKeyCode()==KeyEvent.VK_S)
 		{
 			//向下
-			this.hero.setDirect(2);
-			this.hero.moveDown();
+			if(this.hero.setDirect(2))
+				this.hero.moveDown();
 		}else if(arg0.getKeyCode()==KeyEvent.VK_A)
 		{
 			//向左
-			this.hero.setDirect(3);
-			this.hero.moveLeft();
+			if(this.hero.setDirect(3))
+				this.hero.moveLeft();
 		}
 		
 		if(arg0.getKeyCode()==KeyEvent.VK_J)

@@ -105,6 +105,23 @@ class bug implements Runnable{// 地形块
 	}
 }
 
+//每关地图
+class map{
+	int b1=5,b2=6,b3=7,b4=8,b5=9,b6=10,b7=11,b8=12;
+	Vector<bug>bugs1 = new Vector<bug>();
+	Vector<bug>bugs2 = new Vector<bug>();
+	Vector<bug>bugs3 = new Vector<bug>();
+	Vector<bug>bugs4 = new Vector<bug>();
+	Vector<bug>bugs5 = new Vector<bug>();
+	Vector<bug>bugs6 = new Vector<bug>();
+	Vector<bug>bugs7 = new Vector<bug>();
+	Vector<bug>bugs8 = new Vector<bug>();
+	static bug b11 = new bug(100,135,3);static bug b12 = new bug(300,165,3);
+//	for(int i=1;i<=b1;i++) {
+//		
+//	}
+}
+
 //记录类,同时也可以保存玩家的设置
 class Recorder
 {
@@ -304,11 +321,9 @@ class Recorder
 		Recorder.allEnNum = allEnNum;
 	}
 
-
 	public  Vector<EnemyTank> getEts() {
 		return ets;
 	}
-
 
 	public  void setEts(Vector<EnemyTank> ets1) {	
 		this.ets = ets1;
@@ -488,8 +503,9 @@ class Tank
 		return direct;
 	}
 
-	public void setDirect(int direct) {
+	public boolean setDirect(int direct) {
 		this.direct = direct;
+		return true;
 	}
 
 	public int getSpeed() {
@@ -520,6 +536,10 @@ class Tank
 class EnemyTank extends Tank implements Runnable
 {
 	int times=0;	
+	Vector<bug> bugs = new Vector<bug>();
+	public void setbugs(bug g1) {
+		this.bugs.add(g1);
+	}
 	//定义一个向量，可以访问到MyPanel上所有敌人的坦克
 	Vector<EnemyTank> ets=new Vector<EnemyTank>();
 	
@@ -713,6 +733,17 @@ class EnemyTank extends Tank implements Runnable
 				{
 					if(y>0&&!this.isTouchOtherEnemy())
 					{
+						if(y-speed < 0)
+							continue;
+						//System.out.println(bugs.size());
+						for(int ii=0;ii<bugs.size();ii++) {
+							bug b = bugs.get(ii);
+							if( (x-b.x)<20&& (x-b.x)>-20&& (y==b.y+30)) {//(x>=b.x) && (x<b.x+30)
+								//System.out.println("bbb");
+								y+=speed;
+								break;
+							}
+						}	
 						y-=speed;
 					}
 					try {
@@ -730,6 +761,16 @@ class EnemyTank extends Tank implements Runnable
 					//保证坦克不出边界
 					if(x<400&&!this.isTouchOtherEnemy())
 					{
+						if(x+speed > 370)
+							continue;
+						for(int ii=0;ii<bugs.size();ii++) {
+							bug b = bugs.get(ii);
+							if( (y-b.y)<30&& (y-b.y)>-20&& (x+30==b.x)) {//(x>=b.x) && (x<b.x+30)
+								//System.out.println("bbb");
+								x-=speed;
+								break;
+							}
+						}	
 						x+=speed;
 					}
 					try {
@@ -746,6 +787,16 @@ class EnemyTank extends Tank implements Runnable
 				{
 					if(y<300&&!this.isTouchOtherEnemy())
 					{
+						if(y+speed > 270)
+							continue;
+						for(int ii=0;ii<bugs.size();ii++) {
+							bug b = bugs.get(ii);
+							if( (x-b.x)<20&& (x-b.x)>-20&& (y==b.y-30)) {//(x>=b.x) && (x<b.x+30)
+								//System.out.println("bbb");
+								y-=speed;
+								break;
+							}
+						}	
 						y+=speed;
 					}
 					try {
@@ -762,6 +813,16 @@ class EnemyTank extends Tank implements Runnable
 				{
 					if(x>0&&!this.isTouchOtherEnemy())
 					{
+						if(x-speed < 0)
+							continue;
+						for(int ii=0;ii<bugs.size();ii++) {
+							bug b = bugs.get(ii);
+							if( (y-b.y)<30&& (y-b.y)>-20&& (x-30==b.x)) {//(x>=b.x) && (x<b.x+30)
+								//System.out.println("bbb");
+								x+=speed;
+								break;
+							}
+						}	
 						x-=speed;
 					}
 					try {
@@ -831,6 +892,40 @@ class EnemyTank extends Tank implements Runnable
 //我的坦克
 class Hero extends Tank
 {	
+	Vector<bug> bugs = new Vector<bug>();
+	public void setbugs(bug g1) {
+		this.bugs.add(g1);
+	}
+//	public void setbugs(bug g1,bug g2) {
+//		this.bugs.add(g1);
+//		this.bugs.add(g2);  //多组地形 就添加多次
+//	}
+	public boolean setDirect(int direct) {
+		for(int i=0;i<bugs.size();i++) {
+			bug b = bugs.get(i);
+			if(direct==1) {//xiang you
+				if(x+30>b.x && y>=b.y-20 && y<=b.y+30)
+					return false;
+			}
+//			if(direct==0) {//xiang shang 没问题
+//				if(x+30>b.x && x<b.x+20 && y<=b.y+30)
+//					return false;
+//			}
+			
+			if(direct==2) {//xiang you
+				if(x+20>b.x && x<b.x+20 && y>b.y-30)
+					return false;
+			}
+			if(direct==3) {//xiang you
+				if(y<b.y+30 && y>b.y-30 && x+30>b.x)
+					return false;
+			}
+			
+		}	
+		this.direct = direct;
+		return true;
+	}
+	
 	//子弹	
 	//Shot s=null;
 	int mylife = 4;
@@ -879,10 +974,18 @@ class Hero extends Tank
 	
 	
 	//坦克向上移动
-	public void moveUp()
-	{
+	public void moveUp()  // 多组地形 取出多次 ，外加类型判断
+	{	
 		if(y-speed < 0)
 			return;
+		//System.out.println(bugs.size());
+		for(int i=0;i<bugs.size();i++) {
+			bug b = bugs.get(i);
+			if( (x-b.x)<20&& (x-b.x)>-20&& (y==b.y+30)) {//(x>=b.x) && (x<b.x+30)
+				//System.out.println("bbb");
+				return;
+			}
+		}	
 		y-=speed;
 	}
 	//坦克向右移动
@@ -890,6 +993,13 @@ class Hero extends Tank
 	{
 		if(x+speed > 370)
 			return;
+		for(int i=0;i<bugs.size();i++) {
+			bug b = bugs.get(i);
+			if( (y-b.y)<30&& (y-b.y)>-20&& (x+30==b.x)) {//(x>=b.x) && (x<b.x+30)
+				//System.out.println("bbb");
+				return;
+			}
+		}	
 		x+=speed;
 	}
 	
@@ -898,6 +1008,13 @@ class Hero extends Tank
 	{
 		if(y+speed > 270)
 			return;
+		for(int i=0;i<bugs.size();i++) {
+			bug b = bugs.get(i);
+			if( (x-b.x)<20&& (x-b.x)>-20&& (y==b.y-30)) {//(x>=b.x) && (x<b.x+30)
+				//System.out.println("bbb");
+				return;
+			}
+		}	
 		y+=speed;
 	}
 	
@@ -906,6 +1023,13 @@ class Hero extends Tank
 	{
 		if(x-speed < 0)
 			return;
+		for(int i=0;i<bugs.size();i++) {
+			bug b = bugs.get(i);
+			if( (y-b.y)<30&& (y-b.y)>-20&& (x-30==b.x)) {//(x>=b.x) && (x<b.x+30)
+				//System.out.println("bbb");
+				return;
+			}
+		}	
 		x-=speed;
 	}
 }
