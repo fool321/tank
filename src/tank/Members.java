@@ -116,7 +116,11 @@ class map{
 	Vector<bug>bugs6 = new Vector<bug>();
 	Vector<bug>bugs7 = new Vector<bug>();
 	Vector<bug>bugs8 = new Vector<bug>();
-	static bug b11 = new bug(100,135,3);static bug b12 = new bug(300,165,3);
+	static bug b11 = new bug(100,100,1);static bug b12 = new bug(300,160,3);
+	static bug b21 = new bug(100,180,2);static bug b22 = new bug(300,240,2);
+	static bug b31 = new bug(100,230,1);static bug b32 = new bug(300,290,1);
+	
+	static bug b41 = new bug(10,150,1);static bug b42 = new bug(50,210,1);
 //	for(int i=1;i<=b1;i++) {
 //		
 //	}
@@ -126,17 +130,128 @@ class map{
 class Recorder
 {
 	//记录每关有多少敌人
-	private static int enNum=3;
-	
+	private static int enNum=3; /////
+	private static int enNum1=5; 
+	private static int enNum2=7; 
+	private static int enNum3=10; 
+	private static int enNum4=13; 
+	private static int enNum5=16; 
+	private static int score=0;
 	//当前还有多少敌人
 	private static int exsitEny = enNum;
 	//设置我有多少可以用的人
 	private static int myLife=4;
 	
+	private static int kill1=0; /////
+	private static int kill2=0;
+	private static int kill3=0;
+	private static int kill4=0;
+	private static int kill5=0;
+	
+	public static void addkill(int i) {
+		switch (i) {
+		case 1:
+			kill1++;
+			break;
+		case 2:
+			 kill2++;
+			break;
+		case 3:
+			kill3++;
+			break;
+		case 4:
+			kill4++;
+			break;
+		case 5:
+			kill5++;
+			break;
+
+		default:
+			break;
+		}
+	}
+	public static int getkill(int i) {
+		int gg=0;
+		switch (i) {
+		case 1:
+			gg = kill1;
+			break;
+		case 2:
+			gg = kill2;
+			break;
+		case 3:
+			gg = kill3;
+			break;
+		case 4:
+			gg = kill4;
+			break;
+		case 5:
+			gg = kill5;
+			break;
+
+		default:
+			break;
+		}
+		return gg;
+	}
+	public static void allrenew() {
+		enNum=3; /////
+		enNum1=5; 
+		enNum2=7; 
+		enNum3=10; 
+		enNum4=13; 
+		enNum5=16; 
+		score=0;
+		myLife=4;
+		currntlife = myLife;
+		kill1 = 0;
+		kill2 = 0;
+		kill3 = 0;
+		kill4 = 0;
+		kill5 = 0;
+	}
 	//记录总共消灭了多少敌人
 	private static int allEnNum=0;
 	
 	public static int currntlife = myLife;
+	
+	private static int stage = 1;
+	
+	public static int getscore() {
+		return score;
+	}
+	public static void setscore(int i) {
+		switch (i) {
+		case 1:
+			score +=100;
+			break;
+		case 2:
+			score +=200;
+			break;
+		case 3:
+			score +=300;
+			break;
+		case 4:
+			score +=400;
+			break;
+		case 5:
+			score +=1000;
+			break;
+
+		default:
+			break;
+		}
+	}
+	public static void addstage() {
+		stage++;
+	}
+	
+	public static int getstage() {
+		return stage;
+	}
+	public static void resetstage() {
+		stage = 1;
+	}
 	//从文件中恢复记录点
 	static Vector<Node>  nodes=new Vector<Node>();
 	
@@ -288,6 +403,26 @@ class Recorder
 	public static int getEnNum() {
 		return enNum;
 	}
+	public static int getEnNummm(int i) {
+		switch (i) {
+		case 0:
+			return enNum;
+		case 1:
+			return enNum1;				
+		case 2:
+			return enNum2;
+		case 3:
+			return enNum3;
+		case 4:
+			return enNum4;
+		case 5:
+			return enNum5;
+			
+		default:
+			break;
+		}
+		return i;
+	}
 	public static void setEnNum(int enNum) {
 		Recorder.enNum = enNum;
 	}
@@ -299,6 +434,30 @@ class Recorder
 	}
 	public static void setExsitEny() {
 		Recorder.exsitEny -= 1;
+	}
+	public static void reduceenmy(int stage) {
+		switch (stage) {
+		case 1:
+			enNum--;
+			break;
+		case 2:
+			enNum1--;
+			break;
+		case 3:
+			enNum2--;
+			break;
+		case 4:
+			enNum3--;
+			break;
+		case 5:
+			enNum4--;
+			break;
+		case 6:
+			enNum5--;
+			break;
+		default:
+			break;
+		}
 	}
 	public static void setMyLife(int myLife) {
 		Recorder.myLife = myLife;
@@ -896,6 +1055,10 @@ class Hero extends Tank
 	public void setbugs(bug g1) {
 		this.bugs.add(g1);
 	}
+	public void newbugs(Vector<bug>gg) {
+		this.bugs = gg;
+	}
+	int speed = 3;
 //	public void setbugs(bug g1,bug g2) {
 //		this.bugs.add(g1);
 //		this.bugs.add(g2);  //多组地形 就添加多次
