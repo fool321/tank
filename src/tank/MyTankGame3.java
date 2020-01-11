@@ -160,6 +160,7 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 				if ((Recorder.getEnNummm(Recorder.getstage() - 1)) == 0) {// 结束
 					// 结束游戏 询问玩家姓名			
 					scord.i=2;
+					return;
 				}
 			}
 			// System.out.println("hhhhhj");
@@ -303,7 +304,7 @@ class help extends JFrame {// 继承JFrame顶层容器类
 		jp2=new JPanel();
 		jp3=new JPanel();
 		
-		jlb1=new JLabel("请查看 readme 文档");
+		jlb1=new JLabel("请查看 readme文档");
 		
 		jb1=new JButton("got it");	
 		
