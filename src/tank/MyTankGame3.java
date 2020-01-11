@@ -24,73 +24,96 @@ package tank;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.Method;
+import java.text.MessageFormat;
+
 public class MyTankGame3 extends JFrame implements ActionListener {
-	MyPanel mp=null;
-	//定义一个开始面板
-	MyStartPanel msp=null;
-	
-	//作出我需要的菜单
-	JMenuBar jmb=null;
-	//开始游戏
-	JMenu jm1=null;
-	JMenu jm2=null;
-	JMenu jm3=null;
-	JMenuItem jmil=null;
-	JMenuItem jmi2=null;//退出系统
-	JMenuItem jmi3=null;//存盘退出
-	JMenuItem jmi4=null;
-	JMenuItem jmi5=null;
-	JMenuItem jmi6=null;
-	JMenuItem jmi7=null;
+	MyPanel mp = null;
+	// 定义一个开始面板
+	MyStartPanel msp = null;
+
+	// 作出我需要的菜单
+	JMenuBar jmb = null;
+	// 开始游戏
+	JMenu jm1 = null;
+	JMenu jm2 = null;
+	JMenu jm3 = null;
+	JMenu jm4 = null;
+	JMenuItem jmil = null;
+	JMenuItem jmi2 = null;// 退出系统
+	JMenuItem jmi3 = null;// 存盘退出
+	JMenuItem jmi4 = null;
+	JMenuItem jmi5 = null;
+	JMenuItem jmi6 = null;
+	JMenuItem jmi7 = null;
+	JMenuItem jmi8 = null;
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		MyTankGame3 mtg=new MyTankGame3();
+		MyTankGame3 mtg = new MyTankGame3();
+	//	Swing_JTextField aa=new Swing_JTextField();
+		while(true) {
+			//int i=1;
+			System.out.print("");
+			if(scord.i==2) {
+				Swing_JTextField a=new Swing_JTextField();
+				break;
+			}
+			//System.out.println(i--);
+		}
+		//Swing_JTextField.main();
 	}
-	
-	//构造函数
-	public MyTankGame3(){//面板
-		//创建菜单及菜单选项
-		jmb=new JMenuBar();
-		jm1 =new JMenu("游戏(G)");
+
+	// 构造函数
+	public MyTankGame3() {// 面板
+		// 创建菜单及菜单选项
+		jmb = new JMenuBar();
+		jm1 = new JMenu("游戏(G)");
 		jm2 = new JMenu("下一关(M)");
 		jm3 = new JMenu("得分面板(P)");
-		
-		jmil =new JMenuItem("开始新游戏(N)");
-		jmi2 =new JMenuItem("退出游戏(E)");
-		jmi3 =new JMenuItem("存盘退出游戏(C)");
-		jmi4 =new JMenuItem("继续上局游戏(S)");
-		jmi5 =new JMenuItem("下一关(L)");
-		jmi6 =new JMenuItem("当前得分(Q)");
-		jmi7 =new JMenuItem("历史积分版(W)");
-		
-		//注册监听
+		jm4 = new JMenu("游戏帮助(A)");
+
+		jmil = new JMenuItem("开始新游戏(N)");
+		jmi2 = new JMenuItem("退出游戏(E)");
+		jmi3 = new JMenuItem("存盘退出游戏(C)");
+		jmi4 = new JMenuItem("继续上局游戏(S)");
+		jmi5 = new JMenuItem("下一关(L)");
+		jmi6 = new JMenuItem("当前得分(Q)");
+		jmi7 = new JMenuItem("历史积分版(W)");
+		jmi8 = new JMenuItem("游戏帮助(B)");
+
+		// 注册监听
 		jmi4.addActionListener(this);
 		jmi4.setActionCommand("conGame");
-		
-		//注册监听
+
+		// 注册监听
 		jmi3.addActionListener(this);
 		jmi3.setActionCommand("saveExit");
-		
+
 		jmi2.addActionListener(this);
 		jmi2.setActionCommand("exit");
-		
+
 		jmil.addActionListener(this);
 		jmil.setActionCommand("newgame");
-		
+
 		jmi5.addActionListener(this);
 		jmi5.setActionCommand("next");
-		
+
 		jmi6.addActionListener(this);
-		jmi6.setActionCommand("cursd");
-		
+		jmi6.setActionCommand("cursd");// current score
+
 		jmi7.addActionListener(this);
-		jmi7.setActionCommand("hissd");
-		//设置快捷方式
+		jmi7.setActionCommand("hissd");// history score
+		
+		jmi8.addActionListener(this);
+		jmi8.setActionCommand("help");
+		// 设置快捷方式
 		jm1.setMnemonic('G');
 		jmil.setMnemonic('N');
 		jmi2.setMnemonic('E');
@@ -98,26 +121,30 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 		jmi4.setMnemonic('S');
 		jm2.setMnemonic('M');
 		jm3.setMnemonic('P');
+		jm4.setMnemonic('A');
 		jmi5.setMnemonic('L');
 		jmi6.setMnemonic('Q');
 		jmi7.setMnemonic('W');
-		
+		jmi8.setMnemonic('B');
+
 		jm1.add(jmil);
 		jm1.add(jmi2);
-		jm1.add(jmi3);
-		jm1.add(jmi4);
+		//jm1.add(jmi3);
+		//jm1.add(jmi4);
 		jm2.add(jmi5);
 		jm3.add(jmi6);
 		jm3.add(jmi7);
-		
+		jm4.add(jmi8);
+
 		jmb.add(jm1);
 		jmb.add(jm2);
 		jmb.add(jm3);
-		
-		msp=new MyStartPanel();
-		Thread t=new Thread(msp);
+		jmb.add(jm4);
+
+		msp = new MyStartPanel();
+		Thread t = new Thread(msp);
 		t.start();
-		
+
 		this.setJMenuBar(jmb);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.add(msp);
@@ -126,266 +153,421 @@ public class MyTankGame3 extends JFrame implements ActionListener {
 		this.setVisible(true);
 	}
 
-	
-	public void actionPerformed(ActionEvent arg0) {//对用户不同的点击作出不同的处理
+	public void actionPerformed(ActionEvent arg0) {// 对用户不同的点击作出不同的处理
 		// TODO Auto-generated method stub
-		if(arg0.getActionCommand().equals("next")) {
-			System.out.println("hhhhhj");
-			System.out.println(Recorder.getstage()+" gg");
-			System.out.println(Recorder.getEnNummm(Recorder.getstage()-1)+" gg");
-			if((Recorder.getEnNummm(Recorder.getstage()-1))==0) {//此关已经结束//Recorder.getExsitEny()==0
-				System.out.println("7777777");
+		if (arg0.getActionCommand().equals("next")) {
+			if (Recorder.getstage() == 3) {// ////////////// 3
+				if ((Recorder.getEnNummm(Recorder.getstage() - 1)) == 0) {// 结束
+					// 结束游戏 询问玩家姓名			
+					scord.i=2;
+				}
+			}
+			// System.out.println("hhhhhj");
+			// System.out.println(Recorder.getstage()+" gg");
+			// System.out.println(Recorder.getEnNummm(Recorder.getstage()-1)+" gg");
+			if ((Recorder.getEnNummm(Recorder.getstage() - 1)) == 0) {// 此关已经结束//Recorder.getExsitEny()==0
+				// System.out.println("7777777");
 				Recorder.addstage();
-				if(mp != null)
+				if (mp != null)
 					this.remove(mp);
-				
-				mp=new MyPanel("next",Recorder.getstage());//启动mp线程	
-				System.out.println("lzffff  "+ Recorder.getstage());
-				Thread t=new Thread(mp);
+				mp = new MyPanel("next", Recorder.getstage());// 启动mp线程
+				// System.out.println("lzffff "+ Recorder.getstage());
+				Thread t = new Thread(mp);
 				t.start();
 				this.add(mp);
-				//注册监听
+				// 注册监听
 				this.addKeyListener(mp);
-				//显示,刷新JFrame
+				// 显示,刷新JFrame
 				this.setVisible(true);
 			}
 		}
-		if(arg0.getActionCommand().equals("newgame"))
-		{
-			//创建战场面板
+		if (arg0.getActionCommand().equals("newgame")) {
+			// 创建战场面板
 //			System.out.println("gg");
 			Recorder.resetstage();
-			if(mp != null)
+			if (mp != null)
 				this.remove(mp);
-			
-			mp=new MyPanel("newGame",1);//启动mp线程			
-			Thread t=new Thread(mp);
+
+			mp = new MyPanel("newGame", 1);// 启动mp线程
+			Thread t = new Thread(mp);
 			t.start();
-			//先删除旧的开始面板
-			this.remove(msp);   ///不移除会出现闪屏
+			// 先删除旧的开始面板
+			this.remove(msp); /// 不移除会出现闪屏
 			this.add(mp);
-			//注册监听
+			// 注册监听
 			this.addKeyListener(mp);
-			//显示,刷新JFrame
-			this.setVisible(true);	
-		}else if(arg0.getActionCommand().equals("exit"))
-		{
-			//用户点击了退出系统的菜单
-			//保存击毁敌人数量.
-			Recorder.keepRecording();			
+			// 显示,刷新JFrame
+			this.setVisible(true);
+		} else if (arg0.getActionCommand().equals("exit")) {
+			// 用户点击了退出系统的菜单
+			// 保存击毁敌人数量.
+			Recorder.keepRecording();
 			System.exit(0);
-		}//对存盘退出
-		else if(arg0.getActionCommand().equals("saveExit"))
-		{
-			System.out.println("111");
-			System.out.println("mp.ets.size="+mp.ets.size());
-			//工作
-			Recorder rd=new Recorder();
+		} // 对存盘退出
+		else if (arg0.getActionCommand().equals("saveExit")) {
+			// System.out.println("111");
+			// System.out.println("mp.ets.size="+mp.ets.size());
+			// 工作
+			Recorder rd = new Recorder();
 			rd.setEts(mp.ets);
-			//保存击毁敌人的数量和敌人的坐标
-			rd.keepRecAndEnemyTank();			
-			//退出
+			// 保存击毁敌人的数量和敌人的坐标
+			rd.keepRecAndEnemyTank();
+			// 退出
 			System.exit(0);
-		}else if(arg0.getActionCommand().equals("conGame"))
-		{
-			//创建战场面板v     //////未实现相应功能。。
-			mp=new MyPanel("con",1);		
-			//启动mp线程
-			Thread t=new Thread(mp);
+		} else if (arg0.getActionCommand().equals("conGame")) {
+			// 创建战场面板v //////未实现相应功能。。
+			mp = new MyPanel("con", 1);
+			// 启动mp线程
+			Thread t = new Thread(mp);
 			t.start();
-			//先删除旧的开始面板
+			// 先删除旧的开始面板
 			this.remove(msp);
 			this.add(mp);
-			//注册监听
+			// 注册监听
 			this.addKeyListener(mp);
-			//显示,刷新JFrame
+			// 显示,刷新JFrame
 			this.setVisible(true);
 		}
-		if(arg0.getActionCommand().equals("cursd")) {
+		if (arg0.getActionCommand().equals("cursd")) {
 			windows.main(arg0);
 		}
-		if(arg0.getActionCommand().equals("hissd")) {
-			
+		if (arg0.getActionCommand().equals("hissd")) {
+			TableDemo.main(arg0);
+		}
+		if (arg0.getActionCommand().equals("help")) {
+			help a=new help();
 		}
 	}
 }
-class windows extends JFrame{
-	pan pa = null;
-	public void innit() {
-		this.setTitle("统计分数");
-		this.setSize(500,400);
-		this.setLocation(230, 170);
-		pa = new pan();
-		this.add(pa);
-		this.setVisible(true);
-		//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//
+class TableDemo extends JFrame {
+	public TableDemo() {
+		super("得分面板");
+		DefaultTableModel model = null;
+		JTable table = null;
+		int stage = Recorder.getstage();
+		int num = Recorder.getEnNummm(stage);
+//      System.out.println(stage);
+//      System.out.println(num);
+		String[][] datas = {};
+		String[] titles = { "玩家昵称", "得分" };
+		model = new DefaultTableModel(datas, titles);
+		table = new JTable(model);
+
+		scord.readFromFile();
+		int i = scord.num;
+		// System.out.println("gggggggg"+i);
+		if (i >= 1) {
+			model.addRow(new String[] { scord.sc1.name, scord.sc1.sc });
+		}
+		if (i >= 2) {
+			model.addRow(new String[] { scord.sc2.name, scord.sc2.sc });
+		}
+		if (i >= 3) {
+			model.addRow(new String[] { scord.sc3.name, scord.sc3.sc });
+		}
+		if (i >= 4) {
+			model.addRow(new String[] { scord.sc4.name, scord.sc4.sc });
+		}
+		if (i >= 5) {
+			model.addRow(new String[] { scord.sc5.name, scord.sc5.sc });
+		}
+		scord.inni();
+
+		add(new JScrollPane(table));
+
+		setSize(400, 300);
+		this.setLocation(240, 180);
+
+		setVisible(true);
 	}
-	class pan extends JPanel implements Runnable{
-		public void drawTank(int x,int y,Graphics g,int direct,int type)
-		{
-			//判断是什么类型的坦克            ///       不仅是颜色，属性也要变，封装？？
-			switch(type)
-			{
-			case 0:
-				g.setColor(Color.cyan);
-				break;
-			case 1:
-				g.setColor(Color.yellow); //hero
-				break;
-			case 2:
-				g.setColor(Color.pink);
-				break;
-			case 3:
-				g.setColor(Color.red);
-				break;
-			case 4:
-				g.setColor(Color.green);
-				break;
-			case 5:
-				g.setColor(Color.blue);// boss
-				break;
-			}	
-			//判断方向
-			switch(direct)
-			{
-			case 0://向上
-				g.fill3DRect(x, y, 5, 30,false); 
-				g.fill3DRect(x+15,y , 5, 30,false);
-				g.fill3DRect(x+5,y+5 , 10, 20,false);
-				g.fillOval(x+5, y+10, 10, 10);
-				g.drawLine(x+10, y+15, x+10, y);
-				break;
-			case 1://炮筒向右					
-				g.fill3DRect(x, y, 30, 5,false);
-				g.fill3DRect(x, y+15, 30, 5, false);
-				g.fill3DRect(x+5, y+5, 20, 10, false);
-				g.fillOval(x+10, y+5, 10, 10);
-				g.drawLine(x+15, y+10, x+30, y+10);
-				break;
-			case 2://向下
-				g.fill3DRect(x, y, 5, 30,false);
-				g.fill3DRect(x+15,y , 5, 30,false);
-				g.fill3DRect(x+5,y+5 , 10, 20,false);
-				g.fillOval(x+5, y+10, 10, 10);
-				g.drawLine(x+10, y+15, x+10, y+30);
-				break;
-			case 3:	//向左
-				g.fill3DRect(x, y, 30, 5,false);
-				g.fill3DRect(x, y+15, 30, 5, false);
-				g.fill3DRect(x+5, y+5, 20, 10, false);
-				g.fillOval(x+10, y+5, 10, 10);
-				g.drawLine(x+15, y+10, x, y+10);
-				break;
-			}				
+
+	public static void main(ActionEvent arg0) {
+		new TableDemo();
+	}
+}
+
+
+class help extends JFrame {// 继承JFrame顶层容器类
+
+	// 定义组件
+	JPanel jp1, jp2, jp3;// 定义面板
+	JLabel jlb1;
+	JButton jb1;
+
+	public help()//构造函数
+	{
+		//创建组件
+		jp1=new JPanel();//创建三个面板
+		jp2=new JPanel();
+		jp3=new JPanel();
+		
+		jlb1=new JLabel("请查看 readme 文档");
+		
+		jb1=new JButton("got it");	
+		
+		//设置布局管理器
+		this.setLayout(new GridLayout(3,1));//网格布局，3行一列
+
+		//添加组件
+		this.add(jp1);//添加面板
+		this.add(jp2);
+		this.add(jp3);
+		
+		jp1.add(jlb1);//添加面板1的标签和文本框
+		jp3.add(jb1);//添加面板3的按钮
+		
+		jb1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				dispose(); 
+			}
+		});
+		//设置窗口属性
+		this.setTitle("帮助");//创建界面标题
+		this.setSize(300, 150);//设置界面像素
+		this.setLocation(400, 200);//设置界面初始位置
+	//	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置界面和虚拟机一起关闭
+		this.setVisible(true);//设置界面可显示
+		this.setAlwaysOnTop(true);
+	}
+}
+
+class Swing_JTextField extends JFrame {// 继承JFrame顶层容器类
+
+	// 定义组件
+	JPanel jp1, jp2, jp3;// 定义面板
+	JTextField jtf1;// 定义文本框
+	JLabel jlb1,jlb2;// 定义标签
+	JButton jb1;//,jb2;// 定义按钮
+
+	public static void main() {//主函数
+		Swing_JTextField a=new Swing_JTextField();//显示界面
+	}
+
+	public Swing_JTextField()//构造函数
+	{
+		//创建组件
+		jp1=new JPanel();//创建三个面板
+		jp2=new JPanel();
+		jp3=new JPanel();
+		
+		jlb1=new JLabel("用户名");
+		jlb2=new JLabel("请正确输入");
+		jb1=new JButton("计入得分");	
+		jtf1=new JTextField(10);//创建文本框
+		
+		//设置布局管理器
+		this.setLayout(new GridLayout(3,1));//网格布局，3行一列
+
+		//添加组件
+		this.add(jp1);//添加面板
+		this.add(jp2);
+		this.add(jp3);
+		
+		jp1.add(jlb1);//添加面板1的标签和文本框
+		jp1.add(jtf1);
+		jp3.add(jb1);//添加面板3的按钮
+		
+		jp1.add(jlb2);
+		
+		jlb2.setVisible(false);
+		jb1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(jtf1.getText().length()==0)
+					jlb2.setVisible(true);
+				else {
+					//System.out.println(jtf1.getText());
+					int num = Recorder.getkill(1) * 100 + Recorder.getkill(2) * 200 + Recorder.getkill(3) * 300
+							+ Recorder.getkill(4) * 400 + Recorder.getkill(5) * 1000;
+					scord.nameString = jtf1.getText();
+					String numString =null;
+					numString = String.valueOf(num);
+					scord.method1(scord.nameString+" "+numString);
+					dispose();
+				}
+				
+				//dispose();
+				//scord.nameString = 
+			}
+		});
+		//设置窗口属性
+		this.setTitle("通关！");//创建界面标题
+		this.setSize(300, 150);//设置界面像素
+		this.setLocation(400, 200);//设置界面初始位置
+	//	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//设置界面和虚拟机一起关闭
+		this.setVisible(true);//设置界面可显示
+		this.setAlwaysOnTop(true);
+	}
+}
+
+//
+	class windows extends JFrame {
+		pan pa = null;
+
+		public void innit() {
+			this.setTitle("统计分数");
+			this.setSize(500, 400);
+			this.setLocation(230, 170);
+			pa = new pan();
+			this.add(pa);
+			this.setVisible(true);
+			// this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
-		public void showInfo(Graphics g)
-		{
-			g.setColor(Color.black);
-			g.drawString("stage "+Recorder.getstage()+"\n", 100, 30);
-			
-			this.drawTank(50,50, g, 0, 0);
-			g.setColor(Color.black);
-			g.drawString(Recorder.getkill(1)+"    ×    100  =    "+Recorder.getkill(1)*100+"\n",100, 75);
-			
-			this.drawTank(50,90, g, 0, 2);
-			g.setColor(Color.black);
-			g.drawString(Recorder.getkill(2)+"    ×    200  =    "+Recorder.getkill(2)*200+"\n",100, 115);
-			
-			this.drawTank(50,130, g, 0, 3);
-			g.setColor(Color.black);
-			g.drawString(Recorder.getkill(3)+"    ×    300  =    "+Recorder.getkill(3)*300+"\n",100, 155);
-			
-			this.drawTank(50,170, g, 0, 4);
-			g.setColor(Color.black);
-			g.drawString(Recorder.getkill(4)+"    ×    400  =    "+Recorder.getkill(4)*400+"\n",100, 195);
-			
-			this.drawTank(50,210, g, 0, 5);
-			g.setColor(Color.black);
-			g.drawString(Recorder.getkill(5)+"    ×    1000  =    "+Recorder.getkill(5)*1000+"\n",100, 235);
-			
-			g.setColor(Color.black);
-			int num = Recorder.getkill(1)*100 +Recorder.getkill(2)*200+Recorder.getkill(3)*300+Recorder.getkill(4)*400+Recorder.getkill(5)*1000;
-			g.drawString("total:  "+num,200, 275);
-//			
-			
-//			this.drawTank(170, 330, g, 0, 1);
-//			g.setColor(Color.black);
-//			g.drawString(Recorder.currntlife+"", 210, 350);
-//			
-//			//画出玩家的总成绩
-//			g.setColor(Color.black);
-//			Font f=new Font("宋体",Font.BOLD,20);
-//			g.setFont(f);
-//			g.drawString("您的总成绩", 420, 30);
-//			
-//			this.drawTank(420, 60, g, 0, 0);
-//			
-//			g.setColor(Color.black);
-//			g.drawString(Recorder.getscore()+"", 460, 80);
-			//System.out.println(Recorder.getscore()+"gg");
+
+		class pan extends JPanel implements Runnable {
+			public void drawTank(int x, int y, Graphics g, int direct, int type) {
+				// 判断是什么类型的坦克 /// 不仅是颜色，属性也要变，封装？？
+				switch (type) {
+				case 0:
+					g.setColor(Color.cyan);
+					break;
+				case 1:
+					g.setColor(Color.yellow); // hero
+					break;
+				case 2:
+					g.setColor(Color.pink);
+					break;
+				case 3:
+					g.setColor(Color.red);
+					break;
+				case 4:
+					g.setColor(Color.green);
+					break;
+				case 5:
+					g.setColor(Color.blue);// boss
+					break;
+				}
+				// 判断方向
+				switch (direct) {
+				case 0:// 向上
+					g.fill3DRect(x, y, 5, 30, false);
+					g.fill3DRect(x + 15, y, 5, 30, false);
+					g.fill3DRect(x + 5, y + 5, 10, 20, false);
+					g.fillOval(x + 5, y + 10, 10, 10);
+					g.drawLine(x + 10, y + 15, x + 10, y);
+					break;
+				case 1:// 炮筒向右
+					g.fill3DRect(x, y, 30, 5, false);
+					g.fill3DRect(x, y + 15, 30, 5, false);
+					g.fill3DRect(x + 5, y + 5, 20, 10, false);
+					g.fillOval(x + 10, y + 5, 10, 10);
+					g.drawLine(x + 15, y + 10, x + 30, y + 10);
+					break;
+				case 2:// 向下
+					g.fill3DRect(x, y, 5, 30, false);
+					g.fill3DRect(x + 15, y, 5, 30, false);
+					g.fill3DRect(x + 5, y + 5, 10, 20, false);
+					g.fillOval(x + 5, y + 10, 10, 10);
+					g.drawLine(x + 10, y + 15, x + 10, y + 30);
+					break;
+				case 3: // 向左
+					g.fill3DRect(x, y, 30, 5, false);
+					g.fill3DRect(x, y + 15, 30, 5, false);
+					g.fill3DRect(x + 5, y + 5, 20, 10, false);
+					g.fillOval(x + 10, y + 5, 10, 10);
+					g.drawLine(x + 15, y + 10, x, y + 10);
+					break;
+				}
+			}
+
+			public void showInfo(Graphics g) {
+				g.setColor(Color.black);
+				g.drawString("stage " + Recorder.getstage() + "\n", 100, 30);
+
+				this.drawTank(50, 50, g, 0, 0);
+				g.setColor(Color.black);
+				g.drawString(Recorder.getkill(1) + "    ×    100  =    " + Recorder.getkill(1) * 100 + "\n", 100, 75);
+
+				this.drawTank(50, 90, g, 0, 2);
+				g.setColor(Color.black);
+				g.drawString(Recorder.getkill(2) + "    ×    200  =    " + Recorder.getkill(2) * 200 + "\n", 100, 115);
+
+				this.drawTank(50, 130, g, 0, 3);
+				g.setColor(Color.black);
+				g.drawString(Recorder.getkill(3) + "    ×    300  =    " + Recorder.getkill(3) * 300 + "\n", 100, 155);
+
+				this.drawTank(50, 170, g, 0, 4);
+				g.setColor(Color.black);
+				g.drawString(Recorder.getkill(4) + "    ×    400  =    " + Recorder.getkill(4) * 400 + "\n", 100, 195);
+
+				this.drawTank(50, 210, g, 0, 5);
+				g.setColor(Color.black);
+				g.drawString(Recorder.getkill(5) + "    ×    1000  =    " + Recorder.getkill(5) * 1000 + "\n", 100,
+						235);
+
+				g.setColor(Color.black);
+				int num = Recorder.getkill(1) * 100 + Recorder.getkill(2) * 200 + Recorder.getkill(3) * 300
+						+ Recorder.getkill(4) * 400 + Recorder.getkill(5) * 1000;
+				g.drawString("total:  " + num, 200, 275);
+
+			}
+
+			public void paint(Graphics g) {
+				super.paint(g);
+				showInfo(g);
+			}
+
+			public void run() {
+				// TODO Auto-generated method stub
+				while (true) {
+					// 休眠
+					try {
+						Thread.sleep(100);
+					} catch (Exception e) {
+						e.printStackTrace();
+						// TODO: handle exception
+					}
+					this.repaint();
+				}
+			}
 		}
-		public void paint(Graphics g)
-		{
+
+		public static void main(ActionEvent arg0) {
+			windows w = new windows();
+			w.innit();
+		}
+	}
+
+//就是一个提示作用
+	class MyStartPanel extends JPanel implements Runnable {
+		int times = 0;
+
+		public void paint(Graphics g) {
 			super.paint(g);
-			showInfo(g);
+			g.fillRect(0, 0, 400, 300);
+			// 提示信息
+			if (times % 2 == 0) {
+				g.setColor(Color.yellow);
+				// 开关信息的字体
+				Font myFont = new Font("华文新魏", Font.BOLD, 30);
+				g.setFont(myFont);
+				g.drawString("welcome to stage: 1", 30, 150);
+			}
 		}
+
 		public void run() {
 			// TODO Auto-generated method stub
-			while(true)
-			{
-				//休眠
-				try {				
+			while (true) {
+				// 休眠
+				try {
 					Thread.sleep(100);
 				} catch (Exception e) {
 					e.printStackTrace();
 					// TODO: handle exception
-				}			
+				}
+				times++;
+				// 重画
 				this.repaint();
-			}		
-		}	
+			}
+		}
 	}
-
-	public static void main(ActionEvent arg0) {
-		windows w = new windows();
-		w.innit();
-	}
-}
-//就是一个提示作用
-class MyStartPanel extends JPanel implements Runnable
-{
-	int times=0;
-	public void paint(Graphics g)
-	{
-		super.paint(g);
-		g.fillRect(0, 0, 400, 300);
-		//提示信息		
-		if(times%2==0)
-		{
-			g.setColor(Color.yellow);
-			//开关信息的字体
-			Font myFont=new Font("华文新魏",Font.BOLD,30);
-			g.setFont(myFont);
-			g.drawString("welcome to stage: 1", 30, 150);
-		}		
-	}
-
-	public void run() {
-		// TODO Auto-generated method stub
-		while(true)
-		{
-			//休眠
-			try {				
-				Thread.sleep(100);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// TODO: handle exception
-			}			
-			times++;			
-			//重画
-			this.repaint();
-		}		
-	}	
-}
 
 //我的面板
 class MyPanel extends JPanel implements KeyListener,Runnable
@@ -406,16 +588,19 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 	Image image1=null;
 	Image image2=null;
 	Image image3=null;
+	AePlayWave apw=new AePlayWave(this.getClass().getResource("./111.wav").getPath());
 	
 	//构造函数
 	public MyPanel(String flag,int stage)// int stage
 	{		
 		//恢复记录 
+		
 		Recorder.getRecoring();	
 		hero=new Hero(50,200);	
 		//Vector<bug> bbBugs = new Vector<bug>()
 		if(flag.equals("newGame"))
 		{
+			apw.start();
 			//初始化砖块
 			Recorder.allrenew();
 			enSize=Recorder.getEnNum();
@@ -563,7 +748,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		}
 		else if(flag.equals("cons")){
 			this.stage = stage;
-			System.out.println("接着玩");
+			//System.out.println("接着玩");
 			nodes=new Recorder().getNodesAndEnNums();  // 从文件中读出 x Y direct
 			//初始化敌人的坦克
 			for(int i=0;i<nodes.size();i++)
@@ -592,22 +777,15 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		
 		
 		try {
-			image1=ImageIO.read(new File("bomb_1.gif"));
-			image2=ImageIO.read(new File("bomb_2.gif"));
-			image3=ImageIO.read(new File("bomb_3.gif"));
+			//new File("bomb_1.gif")
+			
+			image1=ImageIO.read(this.getClass().getResource("bomb_1.gif"));
+			image2=ImageIO.read(this.getClass().getResource("bomb_2.gif"));
+			image3=ImageIO.read(this.getClass().getResource("bomb_3.gif"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO: handle exception
 		}
-		
-		//播放开战声音
-		AePlayWave apw=new AePlayWave("./111.wav");
-		apw.start();
-		
-		//初始化图片d
-//		image1=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/bomb_1.gif"));
-//		image2=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/bomb_2.gif"));
-//		image3=Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/bomb_3.gif"));
 	}
 	
 	
@@ -638,14 +816,13 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 	//重新paint
 	public void paint(Graphics g)
 	{
+
 		super.paint(g);
 		g.fillRect(0, 0, 400, 300);
 		//g.drawPolygon((20,100), 100, 2);
 		//画出提示信息
 		this.showInfo(g);
-		
-//		g.setColor(Color.yellow); //静态砖块
-//		g.fill3DRect(50, 50, 5, 5, false);
+
 		//画出自己的坦克
 		if(hero.isLive)
 		{
@@ -671,14 +848,14 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		//画出炸弹
 		for(int i=0;i<bombs.size();i++)
 		{
-			System.out.println("bombs.size()="+bombs.size());		
+			//System.out.println("bombs.size()="+bombs.size());		
 			//取出炸弹
 			Bomb b=bombs.get(i);
 			
-			if(b.life>6)
+			if(b.life>60)
 			{
 				g.drawImage(image1, b.x, b.y, 30, 30, this);
-			}else if(b.life>3)
+			}else if(b.life>30)
 			{
 				g.drawImage(image2, b.x, b.y, 30, 30, this);
 			}else{
@@ -718,9 +895,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 				else
 					g.fill3DRect(lzBug.x, lzBug.y, 30, 30, false); // 有内边框
 			}
-//			else {
-//				g.setColor(Color.blue);g.fillRect(lzBug.x, lzBug.y, 30, 30);
-//			}
+
 		}
 		//画出敌人的坦克
 		for(int i=0;i<ets.size();i++)
@@ -736,8 +911,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 				{
 					//取出子弹
 					Shot enemyShot=et.ss.get(j);
-//					enemyShot.setspeed(et.type);
-//					System.out.println(enemyShot.speed);
+
 					if(et.type == 2)
 						enemyShot.speed = 2;
 					if(et.type == 5)
@@ -871,7 +1045,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		case 2:
 			if(s.x>et.x&&s.x<et.x+20&&s.y>et.y&&s.y<et.y+30)
 			{
-				System.out.println(et.getmylife());
+				//System.out.println(et.getmylife());
 				//击中
 				//子弹死亡
 				s.isLive=false;
@@ -883,7 +1057,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 					//创建一颗炸弹,放入Vector
 					et.isLive=false;
 					
-					System.out.println("gg!");
+					//System.out.println("gg!");
 					Bomb b=new Bomb(et.x,et.y);
 					//放入Vector
 					bombs.add(b);
@@ -903,7 +1077,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		case 3:
 			if(s.x>et.x&&s.x<et.x+30&&s.y>et.y&&s.y<et.y+20)
 			{
-				System.out.println(et.getmylife());
+				//System.out.println(et.getmylife());
 				//击中
 				//子弹死亡
 				s.isLive=false;
@@ -912,7 +1086,7 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 				if(et.getmylife()==1) { // 死亡的为敌方坦克 
 					//创建一颗炸弹,放入Vector
 					et.isLive=false;
-					System.out.println("gg!");
+					//System.out.println("gg!");
 					Bomb b=new Bomb(et.x,et.y);
 					//放入Vector
 					bombs.add(b);
@@ -1061,5 +1235,3 @@ class MyPanel extends JPanel implements KeyListener,Runnable
 		}
 	}
 }
-
-
